@@ -5,49 +5,68 @@
         <title>萝卜兔</title>
         <link rel="stylesheet" href="styles/bootstrap.min.css">
         <style>
-            img.avatar{
-                width: 64px;
-                height: auto;
-            }
-            td {
-                vertical-align: middle !important;
-            }
+        img.avatar{
+        width: 64px;
+        height: auto;
+        }
+        td {
+        vertical-align: middle !important;
+        }
+        tr {
+        cursor: pointer;
+        }
         </style>
     </head>
     <body>
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">萝卜兔</a>
+                </div>
+                <button type="button" class="btn btn-default navbar-btn loadall">加载全部JD</button>
+            </div>
+        </nav>
         <div class="container">
             <table class="table table-hover">
-                <tbody id="coms-list"></tbody>
-            </table>
-        </div>
-        <script type="text/tpl" id="tpl-com">
-        <%for(var i = 0;i<coms.length;++i){ %>
-        <tr class="com-item notloaded" data-com-name="<%=coms[i].name%>">
-            <td><img class="avatar" src="<%=coms[i].avatar%>" alt="<%=coms[i].name%>"/></td>
-            <td><h3><%=coms[i].name%>(<%=coms[i].jobs.length%>)</h3></td>
-            <td>
-                <span class="label label-primary"><%=coms[i].comIndustry%></span>
-                <span class="label label-success"><%=coms[i].comFinancing%></span>
-            </td>
-        </tr>
-        <% } %>
-        </script>
-        <script type="text/tpl" id="tpl-job">
-        <% for(var i=0;i<jobs.length;++i){ %>
-            <tr class="job-item notloaded">
-                <td></td>
-                <td><h4><%=jobs[i].jobName%></h4></td>
-                <td>
-                <%if(jobs[i].isUrgent){%><span class="label label-danger">急招</span><%}%>
-                <%if(jobs[i].isNew){%><span class="label label-warning">NEW</span><%}%>
-                <span class="label label-info"><%=jobs[i].jobCity%></span>
-                </td>
-            </tr>
-        <% } %>
-        </script>
-    </body>
-    <script src="lib/jquery.js"></script>
-    <script src="lib/bootstrap.min.js"></script>
-    <script src="lib/require.js"></script>
-    <script src="scripts/query.js"></script>
+            <tbody id="coms-list"></tbody>
+        </table>
+    </div>
+    <script type="text/tpl" id="tpl-com">
+    <%for(var i = 0;i<coms.length;++i){ %>
+    <tr class="com-item notloaded" data-com-name="<%=coms[i].name%>">
+        <td><img class="avatar" src="<%=coms[i].avatar%>" alt="<%=coms[i].name%>"/></td>
+        <td><h3><%=coms[i].name%>(<%=coms[i].jobs.length%>)</h3></td>
+        <td>
+            <span class="label label-primary"><%=coms[i].comIndustry%></span>
+            <span class="label label-success"><%=coms[i].comFinancing%></span>
+        </td>
+    </tr>
+    <% } %>
+    </script>
+    <script type="text/tpl" id="tpl-job">
+    <% for(var i=0;i<jobs.length;++i){ %>
+    <tr class="job-item notloaded" data-job-id="<%=jobs[i].jobId%>">
+        <td></td>
+        <td><h4><%=jobs[i].jobName%></h4></td>
+        <td>
+            <%if(jobs[i].isUrgent){%><span class="label label-danger">急招</span><%}%>
+            <%if(jobs[i].isNew){%><span class="label label-warning">NEW</span><%}%>
+            <span class="label label-info"><%=jobs[i].jobCity%></span>
+        </td>
+    </tr>
+    <% } %>
+    </script>
+    <script type="text/tpl" id="tpl-jd">
+    <tr>
+        <td></td>
+        <td colspan="2">
+            <%=jd%>
+        </td>
+    </tr>
+    </script>
+</body>
+<script src="lib/jquery.js"></script>
+<script src="lib/bootstrap.min.js"></script>
+<script src="lib/require.js"></script>
+<script src="scripts/query.js"></script>
 </html>

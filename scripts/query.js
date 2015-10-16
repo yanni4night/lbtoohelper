@@ -9,7 +9,7 @@
  * @version 0.1.0
  * @since 0.1.0
  */
-require(['lib/underscore'], function() {
+require(['scripts/jobdetail', 'lib/underscore'], function(JobDetail) {
 
     var gComs = [];
 
@@ -19,7 +19,6 @@ require(['lib/underscore'], function() {
             return;
         }
 
-        //gComs = {};
         var coms = {};
         jobs.list.forEach(function(job) {
             if (!coms[job.comName]) {
@@ -41,8 +40,8 @@ require(['lib/underscore'], function() {
         $('#coms-list').html(comsListHTML);
     }
 
-    function JobsLoader($tr){
-        if('true' === $tr.attr('is-loading')){
+    function JobsLoader($tr) {
+        if ('true' === $tr.attr('is-loading')) {
             return;
         }
 
@@ -50,12 +49,14 @@ require(['lib/underscore'], function() {
 
         var comName = $tr.data('com-name');
 
-        var com = (gComs.filter(function(com){
+        var com = (gComs.filter(function(com) {
             return comName === com.name;
-        })||[])[0];
+        }) || [])[0];
 
-        if(com){
-            var jobsHTML = _.template($('#tpl-job').html())({jobs:com.jobs});
+        if (com) {
+            var jobsHTML = _.template($('#tpl-job').html())({
+                jobs: com.jobs
+            });
             $(jobsHTML).insertAfter($tr);
             $tr.removeClass('notloaded');
         }
@@ -63,8 +64,44 @@ require(['lib/underscore'], function() {
         $tr.removeAttr('is-loading');
     }
 
+    function JdLoader($tr) {
+        if ('true' === $tr.attr('is-loading')) {
+            return;
+        }
+
+        $tr.attr('is-loading', 'true');
+
+        var jobId = $tr.data('job-id');
+
+        JobDetail.loadJd(jobId, function(err, html) {
+
+            if (!err && html) {
+                var jdHTML = _.template($('#tpl-jd').html())({
+                    jd: html
+                });
+                $(jdHTML).insertAfter($tr);
+                $tr.removeClass('notloaded');
+            }
+
+            $tr.removeAttr('is-loading');
+        });
+    }
+
     $(document).delegate('#coms-list tr.com-item.notloaded', 'click', function() {
         new JobsLoader($(this));
+    }).delegate('#coms-list tr.job-item.notloaded', 'click', function() {
+        new JdLoader($(this));
+    });
+
+    $('.loadall').click(function() {
+        //sync
+        $('#coms-list tr.com-item.notloaded').each(function(idx, tr) {
+            new JobsLoader($(tr));
+        });
+        //async
+        $('#coms-list tr.job-item.notloaded').each(function(idx, tr) {
+            new JdLoader($(tr));
+        });
     });
 
     show(JSON.parse(localStorage.jobs));
