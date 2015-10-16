@@ -1,0 +1,33 @@
+/**
+  * Copyright (C) 2014 yanni4night.com
+  * back.css
+  *
+  * changelog
+  * 2015-09-15[00:47:06]:revised
+  *
+  * @author yanni4night@gmail.com
+  * @version 0.1.0
+  * @since 0.1.0
+  */
+body{
+    width: 500px;
+}
+a {
+    outline: none !important;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+td,th {
+    text-align: center;
+}
+td:nth-of-type(3) {
+  width: 25%;
+}
+
+.list {
+    height: 300px;
+    overflow-y: scroll; 
+}

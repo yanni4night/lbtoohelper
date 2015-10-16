@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title>lbtoo helper</title>
+        <meta name="revised" value="yanni4night,2015/10/16"/>
+        <link rel="stylesheet" href="./styles/bootstrap.min.css"/>
+        <link rel="stylesheet" href="./styles/popup.css"/>
+    </head>
+    <body>
+        <div class="container">
+            <h3>萝卜兔职位搜索</h3>
+            <form action="about:blank" class="form" autocomplete="off">
+                <div class="form-group">
+                    <label for="">关键字：</label>
+                    <input type="text" class="form-control" name="alltext">
+                </div>
+                <div class="form-group">
+                    <label for="">最大搜索量：</label>
+                    <input type="number" min="10" class="form-control" name="countPerPage" value="1000">
+                </div>
+                <input type="hidden" name="currentPageNum" value="1">
+                <div class="form-group">
+                    <label for="jobCity">城市：</label>
+                    <select name="jobCity" id="jobCity" class="form-control">
+                        <option value="北京" selected>北京</option>
+                        <option value="上海">上海</option>
+                        <option value="广州">广州</option>
+                        <option value="深圳">深圳</option>
+                        <option value="">所有城市</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-info" type="submit">查询</button>
+                    <button class="btn btn-primary last" type="button">上次结果</button>
+                </div>
+            </form>
+        </div>
+        </body>
+        <script src="lib/jquery.js"></script>
+        <script src="lib/bootstrap.min.js"></script>
+        <script src="lib/require.js"></script>
+        <script src="scripts/popup.js"></script>
+    </html>
