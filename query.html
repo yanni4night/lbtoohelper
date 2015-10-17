@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8"/>
-        <title>萝卜兔</title>
+        <title>推荐职位</title>
         <link rel="stylesheet" href="styles/bootstrap.min.css">
         <style>
         img.avatar{
@@ -12,7 +12,7 @@
         td {
             vertical-align: middle !important;
         }
-        td:last-of-type {
+        td.detail {
             width: 60%;
         }
         tr {
@@ -30,11 +30,13 @@
             left: 0;
             width: 100%;
         }
+        .container{margin-top: 20px;}
         </style>
     </head>
     <body>
         <div class="progress">
             <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+                JD加载数：0/0
             </div>
         </div>
         <div class="control">
@@ -47,28 +49,26 @@
     </div>
     <script type="text/tpl" id="tpl-com">
     <%for(var i = 0;i<coms.length;++i){ %>
-    <tr class="com-item notloaded" data-com-name="<%=coms[i].name%>" data-com-id="<%=coms[i].id%>">
+    <tr class="com-item" data-com-name="<%=coms[i].name%>" data-com-id="<%=coms[i].id%>">
         <td><img class="avatar" src="<%=coms[i].avatar%>" alt="<%=coms[i].name%>"/></td>
         <td><h3><%=coms[i].name%>(<%=coms[i].jobs.length%>)</h3>
-            <span class="label label-primary"><%=coms[i].comIndustry%></span>
-            <span class="label label-success"><%=coms[i].comFinancing%></span>
+            <span class="label label-default"><%=coms[i].comIndustry%></span>
+            <span class="label label-default"><%=coms[i].comFinancing%></span>
         </td>
         <td class="detail">
         </td>
     </tr>
-    <% } %>
-    </script>
-    <script type="text/tpl" id="tpl-job">
-    <% for(var i=0;i<jobs.length;++i){ %>
-    <tr class="job-item notloaded" data-job-id="<%=jobs[i].jobId%>">
+    <%var jobs = coms[i].jobs; for(var j=0;j<jobs.length;++j){ %>
+    <tr class="job-item notloaded" data-job-id="<%=jobs[j].jobId%>">
         <td></td>
-        <td><h4><%=jobs[i].jobName%></h4></td>
+        <td><h4><%=jobs[j].jobName%></h4></td>
         <td>
-            <%if(jobs[i].isUrgent){%><span class="label label-danger">急招</span><%}%>
-            <%if(jobs[i].isNew){%><span class="label label-warning">NEW</span><%}%>
-            <span class="label label-info"><%=jobs[i].jobCity%></span>
+            <%if(jobs[j].isUrgent){%><span class="label label-default">急招</span><%}%>
+            <%if(jobs[j].isNew){%><span class="label label-default">NEW</span><%}%>
+            <span class="label label-default"><%=jobs[j].jobCity%></span>
         </td>
     </tr>
+    <% } %>
     <% } %>
     </script>
     <script type="text/tpl" id="tpl-jd">

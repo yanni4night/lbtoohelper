@@ -67,30 +67,6 @@ require(['scripts/jobdetail', 'lib/underscore'], function(JobDetail) {
         loadCd();
     }
 
-    function JobsLoader($tr) {
-        if ('true' === $tr.attr('is-loading')) {
-            return;
-        }
-
-        $tr.attr('is-loading', 'true');
-
-        var comName = $tr.data('com-name');
-
-        var com = (gComs.filter(function(com) {
-            return comName === com.name;
-        }) || [])[0];
-
-        if (com) {
-            var jobsHTML = _.template($('#tpl-job').html())({
-                jobs: com.jobs
-            });
-            $(jobsHTML).insertAfter($tr);
-            $tr.removeClass('notloaded');
-        }
-
-        $tr.removeAttr('is-loading');
-    }
-
     function JdLoader($tr) {
         if ('true' === $tr.attr('is-loading')) {
             return;
@@ -116,9 +92,7 @@ require(['scripts/jobdetail', 'lib/underscore'], function(JobDetail) {
         });
     }
 
-    $(document).delegate('#coms-list tr.com-item.notloaded', 'click', function() {
-        new JobsLoader($(this));
-    }).delegate('#coms-list tr.job-item.notloaded', 'click', function() {
+    $(document).delegate('#coms-list tr.job-item.notloaded', 'click', function() {
         new JdLoader($(this));
     });
 
@@ -130,10 +104,7 @@ require(['scripts/jobdetail', 'lib/underscore'], function(JobDetail) {
         }
 
         isLoadingAll = true;
-        //sync
-        $('#coms-list tr.com-item.notloaded').each(function(idx, tr) {
-            new JobsLoader($(tr));
-        });
+
         //async
         $('#coms-list tr.job-item.notloaded').each(function(idx, tr) {
             new JdLoader($(tr));
@@ -147,7 +118,12 @@ require(['scripts/jobdetail', 'lib/underscore'], function(JobDetail) {
     eventCenter.on('new-jd-loaded', function() {
         var all = $('#coms-list tr.job-item').length;
         var notloaded = $('#coms-list tr.job-item.notloaded').length;
-        $('.progress-bar').css('width', (all - notloaded) / all * 100 + '%'). text((all - notloaded) + '/' + all);
+        if (!notloaded) {
+            $('.progress').remove();
+        } else {
+            $('.progress-bar').css('width', (all - notloaded) / all * 100 + '%').text('JD加载数：' + (all - notloaded) + '/' + all);
+
+        }
     });
 
     show(JSON.parse(localStorage.jobs));
