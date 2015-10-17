@@ -13,6 +13,20 @@ require(['scripts/jobdetail', 'lib/underscore'], function(JobDetail) {
 
     var gComs = [];
 
+    var eventCenter = $({});
+
+    function loadCd() {
+        $('#coms-list tr.com-item').each(function(idx, tr) {
+            var $tr = $(tr);
+            var cid = $tr.data('com-id');
+            JobDetail.loadCd(cid, function(err, text) {
+                if (!err && text) {
+                    $tr.find('.detail').text(text);
+                }
+            });
+        });
+    }
+
     function show(jobs) {
 
         if (!jobs || !jobs.list || 0 === jobs.list.length || !Array.isArray(jobs.list)) {
@@ -24,6 +38,7 @@ require(['scripts/jobdetail', 'lib/underscore'], function(JobDetail) {
             if (!coms[job.comName]) {
                 gComs.push({
                     name: job.comName,
+                    id: job.comId,
                     avatar: job.comLogo,
                     comIndustry: job.comIndustry,
                     comFinancing: job.comFinancing,
@@ -33,11 +48,23 @@ require(['scripts/jobdetail', 'lib/underscore'], function(JobDetail) {
             coms[job.comName].push(job);
         });
 
+        gComs = gComs.sort(function(prev, next) {
+            if (prev.jobs.length > next.jobs.length) {
+                return -1;
+            } else if (prev.jobs.length < next.jobs.length) {
+                return 1;
+            } else {
+                return 0;
+            }
+        });
+
         var comsListHTML = _.template($('#tpl-com').html())({
             coms: gComs
         });
 
         $('#coms-list').html(comsListHTML);
+
+        loadCd();
     }
 
     function JobsLoader($tr) {
@@ -81,6 +108,8 @@ require(['scripts/jobdetail', 'lib/underscore'], function(JobDetail) {
                 });
                 $(jdHTML).insertAfter($tr);
                 $tr.removeClass('notloaded');
+
+                eventCenter.trigger('new-jd-loaded');
             }
 
             $tr.removeAttr('is-loading');
@@ -93,7 +122,14 @@ require(['scripts/jobdetail', 'lib/underscore'], function(JobDetail) {
         new JdLoader($(this));
     });
 
+    var isLoadingAll = false;
+    // 加载全部jd
     $('.loadall').click(function() {
+        if (isLoadingAll) {
+            return
+        }
+
+        isLoadingAll = true;
         //sync
         $('#coms-list tr.com-item.notloaded').each(function(idx, tr) {
             new JobsLoader($(tr));
@@ -102,6 +138,16 @@ require(['scripts/jobdetail', 'lib/underscore'], function(JobDetail) {
         $('#coms-list tr.job-item.notloaded').each(function(idx, tr) {
             new JdLoader($(tr));
         });
+
+        $(this).parent().remove();
+    });
+
+
+    // 更新进度
+    eventCenter.on('new-jd-loaded', function() {
+        var all = $('#coms-list tr.job-item').length;
+        var notloaded = $('#coms-list tr.job-item.notloaded').length;
+        $('.progress-bar').css('width', (all - notloaded) / all * 100 + '%'). text((all - notloaded) + '/' + all);
     });
 
     show(JSON.parse(localStorage.jobs));

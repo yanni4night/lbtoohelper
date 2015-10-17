@@ -27,6 +27,11 @@ define([], function() {
         }
     }
 
+    /**
+     * Load job detail
+     * @param  {number}   id Job id
+     * @param  {Function} cb
+     */
     function loadJd(id, cb) {
         $.get('http://www.lbtoo.com/job/newinfo?id=' + id).done(function(html) {
             parse(html, function(doc) {
@@ -42,7 +47,29 @@ define([], function() {
         });
     }
 
+    /**
+     * Load company detail
+     * @param  {number}   id  Company id
+     * @param  {Function} cb
+     */
+    function loadCd(id, cb) {
+
+        $.get('http://www.lbtoo.com/job/company?id=' + id).done(function(html) {
+            parse(html, function(doc) {
+                if (doc) {
+                    var str = $('.Ly_body .Ly_Box:nth-of-type(2) p', doc).text();
+                    cb(null, str);
+                } else {
+                    cb(new Error('Unknown error'));
+                }
+            });
+        }).fail(function(jqXhr, error, errText) {
+            cb(new Error(errText));
+        });
+    }
+
     return {
-        loadJd: loadJd
+        loadJd: loadJd,
+        loadCd: loadCd
     };
 });

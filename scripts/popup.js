@@ -19,7 +19,7 @@ require([], function() {
 
   $('.last').click(showResult);
 
-  $('form').submit(function() {
+  $('form').submit(function(e) {
     e.preventDefault();
     $.ajax({
       url: 'http://www.lbtoo.com/job/comjoblist',
@@ -29,7 +29,9 @@ require([], function() {
     }).done(function(data) {
       localStorage.jobs = JSON.stringify(data.obj);
       showResult();
-    }).fail(function() {});
+    }).fail(function() {
+      alert('出错');
+    });
 
   });
 
