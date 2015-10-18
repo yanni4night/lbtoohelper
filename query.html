@@ -29,6 +29,9 @@
             .control {
                 display: none;
             }
+            .progress {
+                display: none;
+            }
         }
 
         .progress {
@@ -59,8 +62,8 @@
     <tr class="com-item" data-com-name="<%=coms[i].name%>" data-com-id="<%=coms[i].id%>">
         <td><img class="avatar" src="<%=coms[i].avatar%>" alt="<%=coms[i].name%>"/></td>
         <td><h3><%=coms[i].name%>(<%=coms[i].jobs.length%>)</h3>
-            <span class="label label-default"><%=coms[i].comIndustry%></span>
-            <span class="label label-default"><%=coms[i].comFinancing%></span>
+            <span class="label label-primary"><%=coms[i].comIndustry%></span>
+            <span class="label label-info"><%=coms[i].comFinancing%></span>
         </td>
         <td class="detail">
         </td>
@@ -70,9 +73,9 @@
         <td></td>
         <td><h4><%=jobs[j].jobName%></h4></td>
         <td>
-            <%if(jobs[j].isUrgent){%><span class="label label-default">急招</span><%}%>
-            <%if(jobs[j].isNew){%><span class="label label-default">NEW</span><%}%>
-            <span class="label label-default"><%=jobs[j].jobCity%></span>
+            <%if(jobs[j].isUrgent){%><span class="label label-warning">急招</span><%}%>
+            <%if(jobs[j].isNew){%><span class="label label-danger">NEW</span><%}%>
+            <span class="label label-success"><%=jobs[j].jobCity%></span>
         </td>
     </tr>
     <% } %>
