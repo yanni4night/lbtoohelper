@@ -9,17 +9,17 @@
  * @version 0.1.0
  * @since 0.1.0
  */
-require(['scripts/jobdetail', 'lib/underscore'], function(JobDetail) {
+require(['scripts/jobdetail', 'lib/underscore'], function (JobDetail) {
 
-    var gComs = [];
+
 
     var eventCenter = $({});
 
     function loadCd() {
-        $('#coms-list tr.com-item').each(function(idx, tr) {
+        $('#coms-list tr.com-item').each(function (idx, tr) {
             var $tr = $(tr);
             var cid = $tr.data('com-id');
-            JobDetail.loadCd(cid, function(err, text) {
+            JobDetail.loadCd(cid, function (err, text) {
                 if (!err && text) {
                     $tr.find('.detail').text(text);
                 }
@@ -27,14 +27,15 @@ require(['scripts/jobdetail', 'lib/underscore'], function(JobDetail) {
         });
     }
 
-    function show(jobs) {
+    function showByCompany(jobs) {
 
         if (!jobs || !jobs.list || 0 === jobs.list.length || !Array.isArray(jobs.list)) {
             return;
         }
 
+        var gComs = [];
         var coms = {};
-        jobs.list.forEach(function(job) {
+        jobs.list.forEach(function (job) {
             if (!coms[job.comName]) {
                 gComs.push({
                     name: job.comName,
@@ -48,7 +49,7 @@ require(['scripts/jobdetail', 'lib/underscore'], function(JobDetail) {
             coms[job.comName].push(job);
         });
 
-        gComs = gComs.sort(function(prev, next) {
+        gComs = gComs.sort(function (prev, next) {
             if (prev.jobs.length > next.jobs.length) {
                 return -1;
             } else if (prev.jobs.length < next.jobs.length) {
@@ -67,6 +68,55 @@ require(['scripts/jobdetail', 'lib/underscore'], function(JobDetail) {
         loadCd();
     }
 
+    /**
+     * 按职位维度
+     * @param  {[type]} jobs [description]
+     * @return {[type]}      [description]
+     */
+    function showByType(jobs, keys) {
+
+        if (!jobs || !jobs.list || 0 === jobs.list.length || !Array.isArray(jobs.list)) {
+            return;
+        }
+
+        keys = keys || 'java C/C++ PHP python IOS Android 前端 测试 运维 数据 UI 产品 运营 其它'.toLowerCase().split(/\s+/);
+
+        var gTypes = [];
+        var types = {};
+        jobs.list.forEach(function (job) {
+
+            var name = job.jobName;
+
+            var matchedKey = keys.filter(function (key) {
+                return name.toLowerCase().indexOf(key.toLowerCase()) > -1;
+            })[0] || '其它';
+
+            if (!types[matchedKey]) {
+                gTypes.push({
+                    name: matchedKey,
+                    jobs: types[matchedKey] = []
+                });
+            }
+            types[matchedKey].push(job);
+        });
+
+        gTypes = gTypes.sort(function (prev, next) {
+            if (keys.indexOf(prev.name.toLowerCase()) > keys.indexOf(next.name.toLowerCase())) {
+                return 1;
+            } else {
+                return -1;
+            }
+        });
+
+        var comsListHTML = _.template($('#tpl-type').html())({
+            types: gTypes
+        });
+
+        $('#coms-list').html(comsListHTML);
+
+        // loadCd();
+    }
+
     function JdLoader($tr) {
         if ('true' === $tr.attr('is-loading')) {
             return;
@@ -76,7 +126,7 @@ require(['scripts/jobdetail', 'lib/underscore'], function(JobDetail) {
 
         var jobId = $tr.data('job-id');
 
-        JobDetail.loadJd(jobId, function(err, html) {
+        JobDetail.loadJd(jobId, function (err, html) {
 
             if (!err && html) {
                 var jdHTML = _.template($('#tpl-jd').html())({
@@ -92,13 +142,13 @@ require(['scripts/jobdetail', 'lib/underscore'], function(JobDetail) {
         });
     }
 
-    $(document).delegate('#coms-list tr.job-item.notloaded', 'click', function() {
+    $(document).delegate('#coms-list tr.job-item.notloaded', 'click', function () {
         new JdLoader($(this));
     });
 
     var isLoadingAll = false;
     // 加载全部jd
-    $('.loadall').click(function() {
+    $('.loadall').click(function () {
         if (isLoadingAll) {
             return
         }
@@ -106,7 +156,7 @@ require(['scripts/jobdetail', 'lib/underscore'], function(JobDetail) {
         isLoadingAll = true;
 
         //async
-        $('#coms-list tr.job-item.notloaded').each(function(idx, tr) {
+        $('#coms-list tr.job-item.notloaded').each(function (idx, tr) {
             new JdLoader($(tr));
         });
 
@@ -115,16 +165,18 @@ require(['scripts/jobdetail', 'lib/underscore'], function(JobDetail) {
 
 
     // 更新进度
-    eventCenter.on('new-jd-loaded', function() {
+    eventCenter.on('new-jd-loaded', function () {
         var all = $('#coms-list tr.job-item').length;
         var notloaded = $('#coms-list tr.job-item.notloaded').length;
         if (!notloaded) {
             $('.progress').remove();
         } else {
-            $('.progress-bar').css('width', (all - notloaded) / all * 100 + '%').text('JD加载数：' + (all - notloaded) + '/' + all);
+            $('.progress-bar').css('width', (all - notloaded) / all * 100 + '%').text('JD加载数：' + (all -
+                notloaded) + '/' + all);
 
         }
     });
 
-    show(JSON.parse(localStorage.jobs));
+    //showByCompany(JSON.parse(localStorage.jobs));
+    showByType(JSON.parse(localStorage.jobs));
 });

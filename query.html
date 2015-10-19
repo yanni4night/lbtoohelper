@@ -64,6 +64,7 @@
             <tbody id="coms-list"></tbody>
         </table>
     </div>
+    <!--按公司维度-->
     <script type="text/tpl" id="tpl-com">
     <%for(var i = 0;i<coms.length;++i){ %>
     <tr class="com-item" data-com-name="<%=coms[i].name%>" data-com-id="<%=coms[i].id%>">
@@ -84,6 +85,28 @@
             <%if(jobs[j].isNew){%><span class="label label-danger">NEW</span><%}%>
             <span class="label label-success"><%=jobs[j].jobCity%></span>
         </td>
+    </tr>
+    <% } %>
+    <% } %>
+    </script>
+    <!--按职位维度-->
+    <script type="text/tpl" id="tpl-type">
+    <%for(var i = 0;i<types.length;++i){ %>
+    <tr class="type-item">
+        <td><h3><%=types[i].name%>(<%=types[i].jobs.length%>)</h3>
+        </td>
+        <td></td>
+        <td></td>
+    </tr>
+    <%var jobs = types[i].jobs; for(var j=0;j<jobs.length;++j){ %>
+    <tr class="job-item notloaded" data-job-id="<%=jobs[j].jobId%>">
+        <td><h4><%=jobs[j].jobName%></h4></td>
+        <td>
+            <%if(jobs[j].isUrgent){%><span class="label label-warning">急招</span><%}%>
+            <%if(jobs[j].isNew){%><span class="label label-danger">NEW</span><%}%>
+            <span class="label label-success"><%=jobs[j].jobCity%></span>
+        </td>
+        <td><%=jobs[j].comName%></td>
     </tr>
     <% } %>
     <% } %>
