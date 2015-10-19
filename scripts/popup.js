@@ -9,7 +9,7 @@
  * @version 0.1.0
  * @since 0.1.0
  */
-require([], function () {
+require(['scripts/jobdetail'], function(JobDetail) {
 
     function showResult() {
         chrome.tabs.create({
@@ -19,20 +19,18 @@ require([], function () {
 
     $('.last').click(showResult);
 
-    $('form').submit(function (e) {
+    $('form').submit(function(e) {
         e.preventDefault();
-        $.ajax({
-            url: 'http://www.lbtoo.com/job/comjoblist',
-            type: 'post',
-            dataType: 'json',
-            data: $(this).serialize()
-        }).done(function (data) {
-            localStorage.jobs = JSON.stringify(data.obj);
-            showResult();
-        }).fail(function () {
-            chrome.tabs.create({
-                url: 'http://www.lbtoo.com/user/login_form'
-            });
+
+        JobDetail.query($(this).serialize(), function(err, data) {
+            if (err) {
+                chrome.tabs.create({
+                    url: 'http://www.lbtoo.com/user/login_form'
+                });
+            } else {
+                localStorage.jobs = JSON.stringify(data.obj);
+                showResult();
+            }
         });
 
     });

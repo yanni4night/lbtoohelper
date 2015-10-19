@@ -6,7 +6,10 @@
     "permissions": [
         "http://*.lbtoo.com/",
         "https://*.lbtoo.com/",
-        "unlimitedStorage"
+        "unlimitedStorage",
+        "alarms",
+        "background",
+        "notifications"
     ],
     "icons": {
         "256": "img/icons/icon_32.png",
@@ -22,5 +25,8 @@
     "web_accessible_resources": [
         "favicon.png"
     ],
+    "background": {
+        "page": "back.html"
+    },
     "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }

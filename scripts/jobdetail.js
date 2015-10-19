@@ -74,6 +74,18 @@ define([], function() {
 
     return {
         loadJd: loadJd,
-        loadCd: loadCd
+        loadCd: loadCd,
+        query: function(data, cb) {
+            $.ajax({
+                url: 'http://www.lbtoo.com/job/comjoblist',
+                type: 'post',
+                dataType: 'json',
+                data: data
+            }).done(function(data) {
+                cb(null, data);
+            }).fail(function(jqXhr, error, errText) {
+                cb(new Error(errText));
+            });
+        }
     };
 });
