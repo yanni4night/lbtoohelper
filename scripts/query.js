@@ -169,7 +169,7 @@ require(['scripts/jobdetail', 'lib/underscore'], function (JobDetail) {
         var all = $('#coms-list tr.job-item').length;
         var notloaded = $('#coms-list tr.job-item.notloaded').length;
         if (!notloaded) {
-            $('.progress').remove();
+            $('.progress,.control').remove();
         } else {
             $('.progress-bar').css('width', (all - notloaded) / all * 100 + '%').text('JD加载数：' + (all -
                 notloaded) + '/' + all);
@@ -177,6 +177,13 @@ require(['scripts/jobdetail', 'lib/underscore'], function (JobDetail) {
         }
     });
 
-    //showByCompany(JSON.parse(localStorage.jobs));
-    showByType(JSON.parse(localStorage.jobs));
+    var toggleType = 0;
+
+    function show(){
+        [showByCompany,showByType][toggleType++%2](JSON.parse(localStorage.jobs));
+    }
+
+    $('.toggle').click(show);
+
+    show();
 });
