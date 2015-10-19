@@ -36,8 +36,12 @@ define([], function() {
         $.get('http://www.lbtoo.com/job/newinfo?id=' + id).done(function(html) {
             parse(html, function(doc) {
                 if (doc) {
-                    var str = ($('.JobMs1', doc).find('tr:last-child').remove().end())[0].outerHTML;
-                    cb(null, str);
+                    var jd = $('.JobMs1', doc).find('tr:last-child').remove().end().html();
+                    var money = $('.Bk_money', doc).text();
+                    cb(null, {
+                        jd: jd,
+                        money: money
+                    });
                 } else {
                     cb(new Error('Unknown error'));
                 }

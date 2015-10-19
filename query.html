@@ -10,43 +10,42 @@
         height: auto;
         }
         td {
-            vertical-align: middle !important;
+        vertical-align: middle !important;
         }
         td.detail {
-            width: 60%;
+        width: 60%;
         }
         tr.notloaded {
-            cursor: pointer;
+        cursor: pointer;
         }
         .control {
-            position: fixed;
-            left: 10px;
-            bottom: 10px;
-            width: 100px;
+        position: fixed;
+        left: 10px;
+        bottom: 10px;
+        width: 100px;
         }
-    
+        
         @media print{
-            .control {
-                display: none;
-            }
-            .progress {
-                display: none;
-            }
+        .control {
+        display: none;
         }
-
         .progress {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
+        display: none;
+        }
+        }
+        .progress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
         }
         .container{margin-top: 20px;}
         .fl {float: left;}
         .clearfix {
-            display: block;
-            height: 0;
-            clear: both;
-            content: '';
+        display: block;
+        height: 0;
+        clear: both;
+        content: '';
         }
         </style>
     </head>
@@ -61,7 +60,7 @@
             <button type="button" class="btn btn-default navbar-btn toggle">切换分类方式</button>
         </div>
         <div class="container">
-            <table class="table table-hover">
+            <table class="table">
             <tbody id="coms-list"></tbody>
         </table>
     </div>
@@ -77,17 +76,30 @@
         <td class="detail">
         </td>
     </tr>
-    <%var jobs = coms[i].jobs; for(var j=0;j<jobs.length;++j){ %>
-    <tr class="job-item notloaded" data-job-id="<%=jobs[j].jobId%>">
-        <td></td>
-        <td><h4><%=jobs[j].jobName%></h4></td>
-        <td>
-            <%if(jobs[j].isUrgent){%><span class="label label-warning">急招</span><%}%>
-            <%if(jobs[j].isNew){%><span class="label label-danger">NEW</span><%}%>
-            <span class="label label-success"><%=jobs[j].jobCity%></span>
+    
+    <tr>
+        <td colspan="3">
+            <table class="table table-hover">
+                <tbody>
+                    <%var jobs = coms[i].jobs; for(var j=0;j<jobs.length;++j){ %>
+                    <tr class="job-item notloaded" data-job-id="<%=jobs[j].jobId%>">
+                        <td><h4><%=jobs[j].jobName%></h4></td>
+                        <td><%=jobs[j].payMin/1e4%>~<%=jobs[j].payMax/1e4%>万</td>
+                        <td>
+                            <%if(jobs[j].isUrgent){%><span class="label label-warning">急招</span><%}%>
+                            <%if(jobs[j].isNew){%><span class="label label-danger">NEW</span><%}%>
+                            <span class="label label-success"><%=jobs[j].jobCity%></span>
+                            <% if(jobs[j].feedBackContent.indexOf('关闭')>-1){ %>
+                            <span class="label label-default">已关闭</span>
+                            <% } %>
+                        </td>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
         </td>
     </tr>
-    <% } %>
+    
     <% } %>
     </script>
     <!--按职位维度-->
@@ -99,23 +111,35 @@
         <td></td>
         <td></td>
     </tr>
-    <%var jobs = types[i].jobs; for(var j=0;j<jobs.length;++j){ %>
-    <tr class="job-item notloaded" data-job-id="<%=jobs[j].jobId%>">
-        <td><h4><%=jobs[j].jobName%></h4></td>
-        <td>
-            <%if(jobs[j].isUrgent){%><span class="label label-warning">急招</span><%}%>
-            <%if(jobs[j].isNew){%><span class="label label-danger">NEW</span><%}%>
-            <span class="label label-success"><%=jobs[j].jobCity%></span>
+    
+    <tr>
+        <td colspan="3">
+            <table class="table table-hover">
+                <tbody>
+                    <%var jobs = types[i].jobs; for(var j=0;j<jobs.length;++j){ %>
+                    <tr class="job-item notloaded" data-job-id="<%=jobs[j].jobId%>">
+                        <td><h4><%=jobs[j].jobName%></h4></td>
+                        <td><%=jobs[j].payMin/1e4%>~<%=jobs[j].payMax/1e4%>万</td>
+                        <td>
+                            <%if(jobs[j].isUrgent){%><span class="label label-warning">急招</span><%}%>
+                            <%if(jobs[j].isNew){%><span class="label label-danger">NEW</span><%}%>
+                            <span class="label label-success"><%=jobs[j].jobCity%></span>
+                            <% if(~jobs[j].feedBackContent.indexOf('关闭')){ %>
+                            <span className="label label-default">已关闭</span>
+                            <% } %>
+                        </td>
+                        <td><%=jobs[j].comName%></td>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
         </td>
-        <td><%=jobs[j].comName%></td>
     </tr>
-    <% } %>
     <% } %>
     </script>
     <script type="text/tpl" id="tpl-jd">
     <tr>
-        <td></td>
-        <td colspan="2">
+        <td colspan="3">
             <%=jd%>
         </td>
     </tr>

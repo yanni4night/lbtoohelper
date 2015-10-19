@@ -126,12 +126,10 @@ require(['scripts/jobdetail', 'lib/underscore'], function (JobDetail) {
 
         var jobId = $tr.data('job-id');
 
-        JobDetail.loadJd(jobId, function (err, html) {
+        JobDetail.loadJd(jobId, function (err, ret) {
 
-            if (!err && html) {
-                var jdHTML = _.template($('#tpl-jd').html())({
-                    jd: html
-                });
+            if (!err && ret) {
+                var jdHTML = _.template($('#tpl-jd').html())(ret);
                 $(jdHTML).insertAfter($tr);
                 $tr.removeClass('notloaded');
 
